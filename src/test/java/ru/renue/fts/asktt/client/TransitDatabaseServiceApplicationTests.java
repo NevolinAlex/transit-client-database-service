@@ -1,4 +1,4 @@
-package ru.itclick;
+package ru.renue.fts.asktt.client;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
