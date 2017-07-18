@@ -1,0 +1,14 @@
+oracle:
+  password: Gjhjctyjr
+  username: system
+  url: jdbc:oracle:thin:@31.186.98.2:1521/ASKTT2_CLIENT
+spring.jpa.properties.hibernate:
+  dialect: org.hibernate.dialect.Oracle10gDialect
+  format_sql: true
+mq:
+  channel: NCTS.CLIENT.SVRCONN
+  queue-manager: RU.FTS.CITTU.RNTS.CLIENT
+  queue-destination-name: RU.FTS.CITTU.RNTS.APP
+  queue-receiver-name: 10502060.INCOME
+  port: 1415
+  host: 31.186.98.2
