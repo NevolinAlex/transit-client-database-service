@@ -36,5 +36,6 @@ dependencies {
 	compileOnly group: 'com.ibm', name: 'com.ibm.mq', version: '5.3.07'
 	compile group: 'org.springframework', name: 'spring-jms', version: '4.3.9.RELEASE'
 	compileOnly fileTree(dir: '.\\libs', includes: ['*.jar'])
+	compile group: 'com.caucho', name: 'hessian', version: '4.0.38'
 
 }
