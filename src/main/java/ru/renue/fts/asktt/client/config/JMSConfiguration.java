@@ -9,14 +9,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
-import ru.renue.fts.asktt.client.JMS.SimpleMessageListener;
+import ru.renue.fts.asktt.client.jms.SimpleMessageListener;
 
 import javax.jms.JMSException;
 
 /**
  * Created by disap on 18.07.2017.
  */
-@ComponentScan({"ru.renue.fts.asktt.client.JMS"})
+@ComponentScan({"ru.renue.fts.asktt.client.jms"})
 @Configuration
 public class JMSConfiguration {
     @Value("${mq.host}")

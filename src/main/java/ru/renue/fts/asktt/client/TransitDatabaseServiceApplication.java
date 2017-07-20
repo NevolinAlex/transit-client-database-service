@@ -18,12 +18,12 @@ public class TransitDatabaseServiceApplication {
 		SpringApplication.run(TransitDatabaseServiceApplication.class, args);
 	}
 
-	@RestController
-	class GreetingController {
-
-		@RequestMapping("/hello/{name}")
-		String hello(@PathVariable String name) {
-			return "Hello, " + name + "!";
-		}
-	}
+//	@RestController
+//	class GreetingController {
+//
+//		@RequestMapping("/hello/{name}")
+//		String hello(@PathVariable String name) {
+//			return "Hello, " + name + "!";
+//		}
+//	}
 }

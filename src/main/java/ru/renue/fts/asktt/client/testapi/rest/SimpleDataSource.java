@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.TestAPI.RESTful;
+package ru.renue.fts.asktt.client.testapi.rest;
 
 /**
  * Created by disap on 18.07.2017.

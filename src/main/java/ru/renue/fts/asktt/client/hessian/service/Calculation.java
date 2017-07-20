@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.HessianTest;
+package ru.renue.fts.asktt.client.hessian.service;
 
 /**
  * Created by disap on 19.07.2017.

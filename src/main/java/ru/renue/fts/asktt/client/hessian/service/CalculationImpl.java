@@ -1,7 +1,5 @@
-package ru.renue.fts.asktt.client.HessianTest;
+package ru.renue.fts.asktt.client.hessian.service;
 
-import com.caucho.hessian.server.HessianServlet;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Component;
 
 /**

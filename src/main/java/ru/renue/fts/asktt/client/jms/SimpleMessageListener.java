@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.JMS;
+package ru.renue.fts.asktt.client.jms;
 
 import org.springframework.stereotype.Service;
 

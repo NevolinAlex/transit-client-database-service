@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.JMS;
+package ru.renue.fts.asktt.client.jms;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
