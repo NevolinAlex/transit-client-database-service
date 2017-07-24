@@ -10,7 +10,7 @@ mq:
 # Hibernate properties
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/mq_history
+    url: jdbc:postgresql://localhost:5432/transit_service
     username: postgres
     password: 2150
   jpa:

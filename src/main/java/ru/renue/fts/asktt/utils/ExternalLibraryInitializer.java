@@ -22,6 +22,10 @@ public class ExternalLibraryInitializer {
         this.librariesPath = librariesPath;
     }
 
+    /**
+     * Добавление библиотек в classpath.
+     * @throws IOException
+     */
     public void init() throws IOException {
         for (URL url : getUrls()) {
             addURL(url);
@@ -42,15 +46,16 @@ public class ExternalLibraryInitializer {
             Method method = classLoaderClazz.getDeclaredMethod("addURL", parameters);
             method.setAccessible(true);
             method.invoke(systemClassLoader, new Object[]{url});
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             t.printStackTrace();
             throw new IOException("Error, could not add URL to system classloader");
         }
     }
 
     /**
-     * Возвращает список библиотек, находящихся в директории {@link ExternalLibraryInitializer#librariesPath}.
+     * Возвращает список библиотек.
+     * Находящихся в директории
+     * {@link ExternalLibraryInitializer#librariesPath}.
      *
      * @return
      */
@@ -79,8 +84,7 @@ public class ExternalLibraryInitializer {
                     jar.close();
                     result.add(listFile[i].toURI().toURL());
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println(listFile[i].getAbsolutePath());
             }

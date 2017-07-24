@@ -12,7 +12,11 @@ import javax.jms.TextMessage;
  */
 @Service
 public class SimpleMessageListener implements MessageListener {
-    public void onMessage(Message message) {
+    /**
+     * Сервис для работы со входящими сообщениями.
+     * @param message
+     */
+    public void onMessage(final Message message) {
         TextMessage textMessage = (TextMessage) message;
         try {
             System.out.println(textMessage.getText());

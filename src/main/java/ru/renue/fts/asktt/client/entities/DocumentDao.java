@@ -8,6 +8,6 @@ import javax.transaction.Transactional;
  * Created by disap on 20.07.2017.
  */
 @Transactional
-public interface DocumentDao extends CrudRepository<Document, Integer>{
+public interface DocumentDao extends CrudRepository<Document, Integer> {
 
 }

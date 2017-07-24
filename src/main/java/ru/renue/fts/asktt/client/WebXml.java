@@ -22,15 +22,14 @@ public class WebXml extends SpringBootServletInitializer {
         ExternalLibraryInitializer hacker = new ExternalLibraryInitializer(System.getProperty("custom.libraries.path"));
         try {
             hacker.init();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return application.sources(Application.class);
     }
 
     @Override
-    public void onStartup(ServletContext container) {
+    public void onStartup(final ServletContext container) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.setConfigLocation("ru.renue.fts.asktt.utils.config");
 

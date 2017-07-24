@@ -34,7 +34,11 @@ public class JMSConfiguration {
 
     @Autowired
     private SimpleMessageListener messageListenerContainer;
-
+    /**
+     * Фабрика соединений MQ (пока не разобрался).
+     * используются параметры соединения из application.yml
+     * @return Возвращает фабрику
+     */
     @Bean
     public MQQueueConnectionFactory connectionFactory() {
 
@@ -51,17 +55,24 @@ public class JMSConfiguration {
         return connectionFactory;
     }
 
+    /**
+     * Листенер контейнер (пока не разобрался).
+     * @return Возвращает контейнер
+     */
     @Bean
-    public DefaultMessageListenerContainer listenerContainer(){
+    public DefaultMessageListenerContainer listenerContainer() {
         DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
         container.setDestinationName(receiverName);
         container.setMessageListener(messageListenerContainer);
         return container;
     }
-
+    /**
+     * Шаблон JMS-сообщения(пока не разобрался).
+     * @return Возвращает шаблон
+     */
     @Bean
-    public JmsTemplate jmsTemplate(){
+    public JmsTemplate jmsTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());
         jmsTemplate.setDefaultDestinationName(destinationName);
         return jmsTemplate;
