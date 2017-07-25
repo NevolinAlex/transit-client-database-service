@@ -1,10 +1,10 @@
 mq:
-  channel: NCTS.CLIENT.SVRCONN
-  queue-manager: RU.FTS.CITTU.RNTS.CLIENT
-  queue-destination-name: RU.FTS.CITTU.RNTS.APP
-  queue-receiver-name: 10502060.INCOME
+  channelName: NCTS.CLIENT.SVRCONN
+  queueManager: RU.FTS.CITTU.RNTS.CLIENT
+  queueDestinationName: RU.FTS.CITTU.RNTS.APP
+  queueRecievedName: 10502060.INCOME
   port: 1415
-  host: 31.186.98.2
+  hostname: 31.186.98.2
 
 # Details for our datasource
 # Hibernate properties

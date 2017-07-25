@@ -15,11 +15,11 @@ import static org.junit.Assert.*;
 
 /**
  * Created by disap on 21.07.2017.
+ * Тестирование функциональности Hibernate.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MessageInfoRepositoryTest {
-
 
     private static final long TEST_CUSTOM_ID = 10510600;
     private static final byte[] TEST_BYTE_ARRAY = new byte[]{1,2};
@@ -28,9 +28,8 @@ public class MessageInfoRepositoryTest {
     private MessageInfoRepository messageInfoRepository;
 
     /**
-     * Тестирует фукнциональность Hibernate.
-     * Сохранение, поиск и удаление данных
-     * в message_information
+     * Тест на поиск записей.
+     * в message_information по customId и docStatus
      * @throws Exception
      */
     @Test
