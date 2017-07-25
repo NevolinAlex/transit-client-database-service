@@ -26,7 +26,7 @@ public class RestControllerExample {
 
     /**
      * Метод для тестирования функционала hibernate.
-     * создание нового объекта, сохарнение его с помощью Hibernate
+     * создание нового объекта, сохарнение его с помощью JPA
      * @return Записи подходязщие условию
      */
     @RequestMapping("/test")

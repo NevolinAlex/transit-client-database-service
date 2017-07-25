@@ -41,13 +41,13 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compileOnly ('org.projectlombok:lombok:1.16.18')
 	compile group: 'org.springframework', name: 'spring-web', version: '4.3.9.RELEASE'
-	/*compile group: 'javax.jms', name: 'jms', version: '1.1'
-	*/
+	//compile group: 'javax.jms', name: 'jms', version: '1.1'
+	compile group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	/*compileOnly group: 'com.ibm', name: 'com.ibm.mq', version: '5.3.07'
 	*/
 	compile group: 'org.springframework', name: 'spring-jms', version: '4.3.9.RELEASE'
-	compileOnly fileTree(dir: '.\\libs', includes: ['*.jar'])
+	compile fileTree(dir: '.\\libs', includes: ['*.jar'])
 	compile group: 'com.caucho', name: 'hessian', version: '4.0.38'
 	compile group: 'org.postgresql', name: 'postgresql', version: '9.4.1212'
 	compile 'org.postgresql:postgresql'

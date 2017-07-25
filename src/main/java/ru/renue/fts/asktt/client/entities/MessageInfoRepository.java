@@ -4,6 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 import ru.renue.fts.asktt.client.enums.DocumentStatus;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,5 +24,5 @@ public interface MessageInfoRepository extends CrudRepository<MessageInfo, Long>
      * @param documentStatus Статус документа принятого/отправленного в очередь
      * @return Возвращает список записей подходящих по условию
      */
-    List<MessageInfo> findByCustomIdAndDocumentStatus(long customId, DocumentStatus documentStatus);
+    ArrayList<MessageInfo> findByCustomIdAndDocumentStatus(long customId, DocumentStatus documentStatus);
 }

@@ -7,6 +7,7 @@ import ru.renue.fts.asktt.client.enums.DocumentStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -75,9 +76,33 @@ public class MessageInfo {
     @Override
     public String toString() {
         return " {Id: " + this.id+
-                "\n Data: " + this.data.toString()+
+                //"\n Data: " + this.data.clone().toString()+
                 "\n Document status:" + this.documentStatus+
                 "\n Custom Id : " + this.customId+
                 "\n Date: " + this.dateTime +"}\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MessageInfo)) return false;
+
+        MessageInfo that = (MessageInfo) o;
+
+        if (getId() != that.getId()) return false;
+        if (getCustomId() != that.getCustomId()) return false;
+        if (!Arrays.equals(getData(), that.getData())) return false;
+        if (getDocumentStatus() != that.getDocumentStatus()) return false;
+        return getDateTime().equals(that.getDateTime());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + Arrays.hashCode(getData());
+        result = 31 * result + getDocumentStatus().hashCode();
+        result = 31 * result + (int) (getCustomId() ^ (getCustomId() >>> 32));
+        result = 31 * result + getDateTime().hashCode();
+        return result;
     }
 }
