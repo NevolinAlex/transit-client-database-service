@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.enums;
+package ru.renue.fts.asktt.client.data.enums;
 
 /**
  * Created by disap on 21.07.2017.

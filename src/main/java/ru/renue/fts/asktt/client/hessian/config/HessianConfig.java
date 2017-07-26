@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.config;
+package ru.renue.fts.asktt.client.hessian.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;

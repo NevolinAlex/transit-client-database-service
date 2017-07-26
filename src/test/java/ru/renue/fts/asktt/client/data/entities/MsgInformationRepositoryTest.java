@@ -1,15 +1,15 @@
-package ru.renue.fts.asktt.client.entities;
+package ru.renue.fts.asktt.client.data.entities;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.renue.fts.asktt.client.enums.DocumentStatus;
+import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
+import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -19,13 +19,13 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MessageInfoRepositoryTest {
+public class MsgInformationRepositoryTest {
 
     private static final long TEST_CUSTOM_ID = 10510600;
     private static final byte[] TEST_BYTE_ARRAY = new byte[]{1,2};
 
     @Autowired
-    private MessageInfoRepository messageInfoRepository;
+    private MsgInformationRepository msgInformationRepository;
 
     /**
      * Тест на поиск записей.
@@ -34,12 +34,12 @@ public class MessageInfoRepositoryTest {
      */
     @Test
     public void findByCustomIdAndDocumentStatusTest() throws Exception {
-        MessageInfo messageInfo = new MessageInfo(TEST_BYTE_ARRAY, DocumentStatus.SENT, TEST_CUSTOM_ID, new Date());
-        messageInfoRepository.save(messageInfo);
-        ArrayList<MessageInfo> messageInfoList = messageInfoRepository.
-                findByCustomIdAndDocumentStatus(messageInfo.getCustomId(), messageInfo.getDocumentStatus());
-        messageInfoRepository.delete(messageInfo.getId());
-        assertTrue(messageInfo.equals(messageInfoList.get(messageInfoList.size()-1)));
+        MsgInformation msgInformation = new MsgInformation(TEST_BYTE_ARRAY, DocumentStatus.SENT, TEST_CUSTOM_ID, new Date());
+        msgInformationRepository.save(msgInformation);
+        ArrayList<MsgInformation> msgInformationList = msgInformationRepository.
+                findByCustomIdAndDocumentStatus(msgInformation.getCustomId(), msgInformation.getDocumentStatus());
+        msgInformationRepository.delete(msgInformation.getId());
+        assertTrue(msgInformation.equals(msgInformationList.get(msgInformationList.size()-1)));
     }
 
     /**
@@ -50,9 +50,9 @@ public class MessageInfoRepositoryTest {
     @Test
     public void deleteByCustomId() throws Exception {
         long customId = 111;
-        MessageInfo messageInfo = new MessageInfo(TEST_BYTE_ARRAY, DocumentStatus.SENT, customId, new Date());
-        messageInfoRepository.save(messageInfo);
-        int deletedCount = messageInfoRepository.deleteByCustomId(customId);
+        MsgInformation msgInformation = new MsgInformation(TEST_BYTE_ARRAY, DocumentStatus.SENT, customId, new Date());
+        msgInformationRepository.save(msgInformation);
+        int deletedCount = msgInformationRepository.deleteByCustomId(customId);
         assertEquals(1, deletedCount);
     }
 

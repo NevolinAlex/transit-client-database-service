@@ -1,13 +1,15 @@
-package ru.renue.fts.asktt.client.testapi.rest;
+package ru.renue.fts.asktt.client.rest;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.renue.fts.asktt.client.entities.DocumentDao;
-import ru.renue.fts.asktt.client.entities.MessageInfo;
-import ru.renue.fts.asktt.client.entities.MessageInfoRepository;
-import ru.renue.fts.asktt.client.enums.DocumentStatus;
+import ru.renue.fts.asktt.client.camel.api.MqExecutor;
+import ru.renue.fts.asktt.client.data.entities.MsgInformation;
+import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
+import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
 import java.util.Date;
 import java.util.List;
 /**
@@ -17,12 +19,14 @@ import java.util.List;
 public class RestControllerExample {
     private static final byte[] TEST_ARRAY= new byte[]{11,12};
     private static final long TEST_CUSTOM_ID = 1050060;
+    private MqExecutor mqExecutor;
+    @Autowired
+    private CamelContext camelContext;
+    @Autowired
+    private ProducerTemplate producerTemplate;
 
     @Autowired
-    private DocumentDao documentDao;
-
-    @Autowired
-    private MessageInfoRepository messageInfoRepository;
+    private MsgInformationRepository msgInformationRepository;
 
     /**
      * Метод для тестирования функционала hibernate.
@@ -31,12 +35,12 @@ public class RestControllerExample {
      */
     @RequestMapping("/test")
     public String test() {
-        MessageInfo messageInfo = new MessageInfo(TEST_ARRAY, DocumentStatus.SENT, TEST_CUSTOM_ID, new Date());
+        MsgInformation messageInfo = new MsgInformation(TEST_ARRAY, DocumentStatus.SENT, TEST_CUSTOM_ID, new Date());
         try {
-            messageInfoRepository.save(messageInfo);
-            List<MessageInfo> messageInfoList = messageInfoRepository.
+            msgInformationRepository.save(messageInfo);
+            List<MsgInformation> messageInfoList = msgInformationRepository.
                     findByCustomIdAndDocumentStatus(messageInfo.getCustomId(), messageInfo.getDocumentStatus());
-            messageInfoRepository.delete(messageInfo.getId());
+            msgInformationRepository.delete(messageInfo.getId());
             return messageInfoList.toString();
         } catch (Exception ex) {
             return "Error creating the user: " + ex.toString();
@@ -49,14 +53,18 @@ public class RestControllerExample {
      * @return
      */
     @RequestMapping("/delete")
-    public String delete(@RequestParam("customId") final long customId){
+    public String delete(@RequestParam("customId") final long customId) throws Exception {
         int numberOfnotes;
         try {
-            numberOfnotes = messageInfoRepository.deleteByCustomId(customId);
+            numberOfnotes = msgInformationRepository.deleteByCustomId(customId);
         }
         catch (Exception ex){
             return "Error deleting the user: " + ex.toString();
         }
+        mqExecutor.checkAndSend("10502060.INCOME", "newtest");
+        //producerTemplate.sendBody("wmq:queue:10502060.INCOME", "test");
+//        camelContext.stopRoute("100");
+//        camelContext.removeRoute("100");
         return "Users deleted succesfuly! " + numberOfnotes + " - notes.";
     }
 

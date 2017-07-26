@@ -1,17 +1,16 @@
-package ru.renue.fts.asktt.client.entities;
+package ru.renue.fts.asktt.client.data.persistence;
 
 import org.springframework.data.repository.CrudRepository;
-import ru.renue.fts.asktt.client.enums.DocumentStatus;
-
+import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
+import ru.renue.fts.asktt.client.data.entities.MsgInformation;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by disap on 21.07.2017.
  */
 @Transactional
-public interface MessageInfoRepository extends CrudRepository<MessageInfo, Long> {
+public interface MsgInformationRepository extends CrudRepository<MsgInformation, Long> {
 
     /**
      * Удаление документа по id таможни.
@@ -24,5 +23,5 @@ public interface MessageInfoRepository extends CrudRepository<MessageInfo, Long>
      * @param documentStatus Статус документа принятого/отправленного в очередь
      * @return Возвращает список записей подходящих по условию
      */
-    ArrayList<MessageInfo> findByCustomIdAndDocumentStatus(long customId, DocumentStatus documentStatus);
+    ArrayList<MsgInformation> findByCustomIdAndDocumentStatus(long customId, DocumentStatus documentStatus);
 }

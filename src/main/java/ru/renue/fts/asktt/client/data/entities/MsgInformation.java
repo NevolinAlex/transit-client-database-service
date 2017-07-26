@@ -1,9 +1,9 @@
-package ru.renue.fts.asktt.client.entities;
+package ru.renue.fts.asktt.client.data.entities;
 
 import lombok.Getter;
 
 import lombok.Setter;
-import ru.renue.fts.asktt.client.enums.DocumentStatus;
+import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,7 +19,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "message_information")
-public class MessageInfo {
+public class MsgInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -41,17 +41,17 @@ public class MessageInfo {
     @NotNull
     private Date dateTime;
 
-    public MessageInfo() {
+    public MsgInformation() {
     }
 
-    public MessageInfo(final byte[] data,final  DocumentStatus documentStatus,final long customId,final Date dateTime) {
+    public MsgInformation(final byte[] data, final  DocumentStatus documentStatus, final long customId, final Date dateTime) {
         this.data = data.clone();
         this.documentStatus = documentStatus;
         this.customId = customId;
         this.dateTime = (Date) dateTime.clone();
     }
 
-    public MessageInfo(final byte[] data,final DocumentStatus documentStatus,final long customId) {
+    public MsgInformation(final byte[] data, final DocumentStatus documentStatus, final long customId) {
         this.data = data.clone();
         this.documentStatus = documentStatus;
         this.customId = customId;
@@ -85,9 +85,9 @@ public class MessageInfo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MessageInfo)) return false;
+        if (!(o instanceof MsgInformation)) return false;
 
-        MessageInfo that = (MessageInfo) o;
+        MsgInformation that = (MsgInformation) o;
 
         if (getId() != that.getId()) return false;
         if (getCustomId() != that.getCustomId()) return false;

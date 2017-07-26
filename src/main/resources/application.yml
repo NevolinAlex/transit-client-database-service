@@ -1,4 +1,4 @@
-mq:
+wmq:
   channelName: NCTS.CLIENT.SVRCONN
   queueManager: RU.FTS.CITTU.RNTS.CLIENT
   queueDestinationName: RU.FTS.CITTU.RNTS.APP

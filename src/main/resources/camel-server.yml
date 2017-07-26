@@ -1,0 +1,1 @@
+from("wmq:queue:10502060.INCOME").log(LoggingLevel.INFO, "Success! ${body}").to("file://test");

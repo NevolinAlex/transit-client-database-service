@@ -31,7 +31,7 @@ public class WebXml extends SpringBootServletInitializer {
     @Override
     public void onStartup(final ServletContext container) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation("ru.renue.fts.asktt.utils.config");
+        context.setConfigLocation("ru.renue.fts.asktt.utils.outdate");
 
         container.addListener(new ContextLoaderListener(context));
 
