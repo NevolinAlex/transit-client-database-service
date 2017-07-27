@@ -1,6 +1,7 @@
-package ru.renue.fts.asktt.client.hessian.service;
+package ru.renue.fts.asktt.client.hessian.implementation;
 
 import org.springframework.stereotype.Component;
+import ru.renue.fts.asktt.client.hessian.api.Calculation;
 
 /**
  * Created by disap on 19.07.2017.

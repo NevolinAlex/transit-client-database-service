@@ -10,6 +10,8 @@ import ru.renue.fts.asktt.client.camel.api.MqExecutor;
 import ru.renue.fts.asktt.client.data.entities.MsgInformation;
 import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
 import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
+import ru.renue.fts.asktt.client.hessian.implementation.MqSenderImpl;
+
 import java.util.Date;
 import java.util.List;
 /**
@@ -18,12 +20,12 @@ import java.util.List;
 @RestController
 public class RestControllerExample {
     private static final byte[] TEST_ARRAY= new byte[]{11,12};
-    private static final long TEST_CUSTOM_ID = 1050060;
-    private MqExecutor mqExecutor;
+    private static final String TEST_QUEUE_NAME = "1050060";
     @Autowired
     private CamelContext camelContext;
+    private MqExecutor mqExecutor;
     @Autowired
-    private ProducerTemplate producerTemplate;
+    private MqSenderImpl mqSender;
 
     @Autowired
     private MsgInformationRepository msgInformationRepository;
@@ -35,11 +37,11 @@ public class RestControllerExample {
      */
     @RequestMapping("/test")
     public String test() {
-        MsgInformation messageInfo = new MsgInformation(TEST_ARRAY, DocumentStatus.SENT, TEST_CUSTOM_ID, new Date());
+        MsgInformation messageInfo = new MsgInformation(TEST_ARRAY, DocumentStatus.SENT, TEST_QUEUE_NAME, new Date());
         try {
             msgInformationRepository.save(messageInfo);
             List<MsgInformation> messageInfoList = msgInformationRepository.
-                    findByCustomIdAndDocumentStatus(messageInfo.getCustomId(), messageInfo.getDocumentStatus());
+                    findByCustomQueueAndDocumentStatus(messageInfo.getCustomQueue(), messageInfo.getDocumentStatus());
             msgInformationRepository.delete(messageInfo.getId());
             return messageInfoList.toString();
         } catch (Exception ex) {
@@ -49,19 +51,19 @@ public class RestControllerExample {
 
     /**
      * Удаление по id таможни.
-     * @param customId Id таможни
+     * @param customQueue Id таможни
      * @return
      */
     @RequestMapping("/delete")
-    public String delete(@RequestParam("customId") final long customId) throws Exception {
+    public String delete(@RequestParam("customId") final String customQueue) throws Exception {
         int numberOfnotes;
         try {
-            numberOfnotes = msgInformationRepository.deleteByCustomId(customId);
+            numberOfnotes = msgInformationRepository.deleteByCustomQueue(customQueue);
         }
         catch (Exception ex){
             return "Error deleting the user: " + ex.toString();
         }
-        mqExecutor.checkAndSend("10502060.INCOME", "newtest");
+        mqSender.sendMessage("10502060.INCOME", new byte[]{1,2,3});
         //producerTemplate.sendBody("wmq:queue:10502060.INCOME", "test");
 //        camelContext.stopRoute("100");
 //        camelContext.removeRoute("100");

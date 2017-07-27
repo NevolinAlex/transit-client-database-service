@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.hessian.service;
+package ru.renue.fts.asktt.client.hessian.api;
 
 /**
  * Created by disap on 19.07.2017.

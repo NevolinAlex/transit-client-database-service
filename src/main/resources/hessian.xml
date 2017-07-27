@@ -4,6 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="/Calculation.http" class="org.springframework.remoting.caucho.HessianServiceExporter">
         <property name="service" ref="calculationImpl"/>
-        <property name="serviceInterface" value="ru.renue.fts.asktt.client.hessian.service.Calculation"/>
+        <property name="serviceInterface" value="ru.renue.fts.asktt.client.hessian.api.Calculation"/>
     </bean>
 </beans>

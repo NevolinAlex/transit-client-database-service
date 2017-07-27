@@ -1,4 +1,4 @@
-package ru.renue.fts.asktt.client.hessian.service;
+package ru.renue.fts.asktt.client.hessian.api;
 
 /**
  * Created by disap on 26.07.2017.
@@ -11,5 +11,5 @@ public interface IMqSender {
      * @param queueName
      * @param array
      */
-    void sendmessage(String queueName, byte[] array);
+    void sendMessage(String queueName, byte[] array);
 }

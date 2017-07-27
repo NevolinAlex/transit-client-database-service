@@ -30,7 +30,7 @@ public class MyCamelConfig {
 //                try {
 //                    context.addRoutes(new RouteBuilder() {
 //                        public void configure() {
-//                            from("wmq:queue:10502060.INCOME").log(LoggingLevel.INFO, "Success! ${body}").to("file://test");
+//                            from("wmq:queue:10502060.INCOME").routeId("100").log(LoggingLevel.INFO, "Success! ${body}").to("file://test");
 //                        }
 //                    });
 //                } catch (Exception e) {
@@ -40,15 +40,7 @@ public class MyCamelConfig {
 
             @Override
             public void afterApplicationStart(final CamelContext camelContext) {
-                try {
-                    camelContext.addRoutes(new RouteBuilder() {
-                        public void configure() {
-                            from("wmq:queue:10502060.INCOME").routeId("100").log(LoggingLevel.INFO, "Success! ${body}").to("file://test");
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
             }
         };
     }

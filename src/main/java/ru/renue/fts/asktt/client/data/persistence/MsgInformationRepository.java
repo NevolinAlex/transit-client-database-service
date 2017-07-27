@@ -14,14 +14,23 @@ public interface MsgInformationRepository extends CrudRepository<MsgInformation,
 
     /**
      * Удаление документа по id таможни.
-     * @param customId
+     * @param customQueue
      */
-    int deleteByCustomId(long customId);
+    int deleteByCustomQueue(String customQueue);
     /**
      * Поиск записей из базы, по ID таможни и статусу документа.
-     * @param customId ID таможни
-     * @param documentStatus Статус документа принятого/отправленного в очередь
-     * @return Возвращает список записей подходящих по условию
+     * @param customQueue очередь с которой читает таможня.
+     * @param documentStatus Статус документа принятого/отправленного в очередь.
+     * @return Возвращает список записей подходящих по условию.
      */
-    ArrayList<MsgInformation> findByCustomIdAndDocumentStatus(long customId, DocumentStatus documentStatus);
+    ArrayList<MsgInformation> findByCustomQueueAndDocumentStatus(String customQueue, DocumentStatus documentStatus);
+
+    /**
+     * Получает первое непрочитанное сообщение из базы.
+     * Первое по времени (самое старое)
+     * @param customQueue Имя очереди.
+     * @param documentStatus
+     * @return Либо сообщение, либо null, если все прочитаны
+     */
+    MsgInformation findFirstByCustomQueueAndDocumentStatus(String customQueue, DocumentStatus documentStatus);
 }

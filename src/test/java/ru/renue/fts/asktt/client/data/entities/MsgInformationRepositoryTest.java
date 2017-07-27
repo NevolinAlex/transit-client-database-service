@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class MsgInformationRepositoryTest {
 
-    private static final long TEST_CUSTOM_ID = 10510600;
+    private static final String TEST_CUSTOM_ID = "10502060.INCOME";
     private static final byte[] TEST_BYTE_ARRAY = new byte[]{1,2};
 
     @Autowired
@@ -37,7 +37,7 @@ public class MsgInformationRepositoryTest {
         MsgInformation msgInformation = new MsgInformation(TEST_BYTE_ARRAY, DocumentStatus.SENT, TEST_CUSTOM_ID, new Date());
         msgInformationRepository.save(msgInformation);
         ArrayList<MsgInformation> msgInformationList = msgInformationRepository.
-                findByCustomIdAndDocumentStatus(msgInformation.getCustomId(), msgInformation.getDocumentStatus());
+                findByCustomQueueAndDocumentStatus(msgInformation.getCustomQueue(), msgInformation.getDocumentStatus());
         msgInformationRepository.delete(msgInformation.getId());
         assertTrue(msgInformation.equals(msgInformationList.get(msgInformationList.size()-1)));
     }
@@ -49,10 +49,10 @@ public class MsgInformationRepositoryTest {
      */
     @Test
     public void deleteByCustomId() throws Exception {
-        long customId = 111;
-        MsgInformation msgInformation = new MsgInformation(TEST_BYTE_ARRAY, DocumentStatus.SENT, customId, new Date());
+        String customQueue = "111";
+        MsgInformation msgInformation = new MsgInformation(TEST_BYTE_ARRAY, DocumentStatus.SENT, customQueue, new Date());
         msgInformationRepository.save(msgInformation);
-        int deletedCount = msgInformationRepository.deleteByCustomId(customId);
+        int deletedCount = msgInformationRepository.deleteByCustomQueue(customQueue);
         assertEquals(1, deletedCount);
     }
 
