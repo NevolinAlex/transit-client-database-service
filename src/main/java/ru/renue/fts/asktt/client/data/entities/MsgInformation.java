@@ -18,13 +18,14 @@ import java.util.Date;
 @Setter
 
 @Entity
-@Table(name = "message_information")
+@Table(name = "mq_data_information")
 public class MsgInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "message_id")
     private long id;
 
-    @Column(name = "data")
+    @Column(name = "mq_data")
     @NotNull
     private byte[] data;
 
@@ -33,8 +34,7 @@ public class MsgInformation {
     @NotNull
     private DocumentStatus documentStatus;
 
-    @Column(name = "custom_queue")
-    @NotNull
+    @Column(name = "custom_queue", nullable = false)
     private String customQueue;
 
     @Column(name = "date_time")

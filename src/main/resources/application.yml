@@ -10,14 +10,15 @@ wmq:
 # Hibernate properties
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/transit_service
-    username: postgres
-    password: 2150
+    url: jdbc:oracle:thin:@31.186.98.2:1521/ASKTT2_CLIENT
+    username: TEST
+    password: TEST
+    driver-class-name: oracle.jdbc.OracleDriver
   jpa:
     properties:
       hibernate:
         format-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    database-platform: org.hibernate.dialect.Oracle10gDialect
     hibernate:
       ddl-auto: update
       naming:

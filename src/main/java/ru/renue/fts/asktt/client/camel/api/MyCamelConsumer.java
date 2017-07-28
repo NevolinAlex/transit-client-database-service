@@ -14,6 +14,7 @@ import java.util.Date;
  */
 @Component
 public class MyCamelConsumer {
+    // TODO: 28.07.2017 унаследовать от интерфейса; зачем? спроси у Димы
     @Autowired
     private MsgInformationRepository msgInformationRepository;
     /**

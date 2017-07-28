@@ -9,6 +9,7 @@ import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
 import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
 import ru.renue.fts.asktt.client.hessian.api.IMqSender;
 
+import javax.jms.JMSException;
 import java.util.Date;
 
 /**
@@ -24,14 +25,8 @@ public class MqSenderImpl implements IMqSender {
     @Override
     public void sendMessage(final String queueName, final byte[] array) {
         MsgInformation msgInformation = new MsgInformation(array, DocumentStatus.SENT, queueName, new Date());
-        try{
-            if (routeManager.addRoute(queueName, COMPONENT_NAME)){
-               routeManager.sendAndSave(msgInformation, queueName, COMPONENT_NAME);
-            }
+        if (routeManager.addRoute(queueName, COMPONENT_NAME)){
+           routeManager.sendAndSave(msgInformation, DESTINATION_QUEUE, COMPONENT_NAME);
         }
-        catch (Exception ex){
-            //todo: залогировать, и возможно отправить респонс клиенту а том что с сервисом/очепредью/базой что-то не то
-        }
-
     }
 }

@@ -1,12 +1,17 @@
 package ru.renue.fts.asktt.client.camel.api;
 
+import ch.qos.logback.classic.Logger;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
+import org.hibernate.exception.JDBCConnectionException;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 import org.springframework.stereotype.Component;
 import ru.renue.fts.asktt.client.data.entities.MsgInformation;
 import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
+
+import javax.jms.JMSException;
 
 
 /**
@@ -21,6 +26,8 @@ public class RouteManager {
     @Autowired
     private MsgInformationRepository msgInformationRepository;
 
+    private Logger logger = (Logger) LoggerFactory.getLogger(RouteManager.class);
+
     /**
      * Добавление очереди для прослушивания.
      * @param queueName Имя очереди.
@@ -29,7 +36,7 @@ public class RouteManager {
      */
     public boolean addRoute(final String queueName, final String componentName){
         if (isQueueListening(queueName, componentName)){
-            //todo: залогирвоать, такая очередь уже прослушивается, вместо boolean можно возвращать статус операции (enum)
+            logger.info("Очередь " + componentName + ":" + queueName + " прослушивается.");
             return true;
         }else{
             try {
@@ -40,9 +47,9 @@ public class RouteManager {
                                 .log(LoggingLevel.INFO, "Send to "+queueName+"\n").bean(MyCamelConsumer.class, "receiveMessage(Exchange,${body})");//todo: перенаправить считывание очереди в метод
                     }
                 });
-                //todo: залогировать успешное добавление очереди(если нужно), вроде camel логирует сам
+                logger.info("Стартовало прослушивание очереди: " + componentName + ":" + queueName + ".");
             }catch (Exception ex){
-                //todo: залогировать причину по которой очередь не может добавиться, принять какие-то меры
+                logger.error("Невозможно подключиться к очереди: " + componentName + ":" + queueName + ".");
                 return false;
             }
         }
@@ -50,29 +57,75 @@ public class RouteManager {
     }
 
     /**
-     * Остановка прослушивания очереди по id.
+     * Удаление прослушивания очереди по id.
      * id совпадает с названием очереди.
      * @param routeId id маршрута
      * @return
      */
-    public boolean stopRouteById(final String routeId){
+    public boolean removeRouteById(final String routeId){
+        Route route = camelContext.getRoute(routeId);
         try{
-            Route route = camelContext.getRoute(routeId);
-            if (route != null){
-                camelContext.stopRoute(routeId);
+            if (route != null && stopRouteById(routeId)){
                 camelContext.removeRoute(routeId);
             }
             return true;
         }catch (Exception ex){
-            //todo: залогировать почему данная очередь не может быть остановлена или удалена
+            // TODO: 28.07.2017 вывести название очереди
+            logger.error("Очередь"+route+" не может быть удалена ");
             return false;
         }
     }
 
     /**
+     * Остановка очереди по id.
+     * Не путать с удалением очереди.
+     * @param routeId id очереди.
+     * @return true/false
+     */
+    private boolean stopRouteById(final String routeId){
+        Route route = camelContext.getRoute(routeId);
+        try{
+            if (route!=null)
+                camelContext.stopRoute(routeId);
+            return true;
+        }
+        catch (Exception ex){
+            // TODO: 28.07.2017  Вывести название очереди
+            logger.error("Очередь " + camelContext +"не может быть остановлена. " + ex.getMessage());
+            return false;
+        }
+
+    }
+
+    /**
+     * Старт остановленной очереди.
+     * Не путать с добавлением очереди.
+     * Остановленная очередь имеется в списке путей.
+     *
+     * @param routeId id очереди
+     * @return true/false
+     */
+    private boolean startRouteById(final String routeId){
+        Route route = camelContext.getRoute(routeId);
+        try{
+            if (route != null){
+                camelContext.startRoute(routeId);
+            }
+        }
+        catch (Exception ex){
+            // TODO: 28.07.2017  вывести название очереди которая не может быть запущена
+            logger.error("Остановленная очередь" + camelContext + " не может быть запущена. " + ex.getMessage());
+            return false;
+        }
+        // TODO: 28.07.2017 вывести имя запущенной очереди
+        logger.info("Очередь " + camelContext + " успешно запущена.");
+        return true;
+    }
+
+    /**
      * Проверка на прослушивание очереди.
-     * @param queuename
-     * @param componentName
+     * @param queuename Имя очереди.
+     * @param componentName Название компонента.
      * @return
      */
     private boolean isQueueListening(final String queuename, final String componentName) {
@@ -82,9 +135,7 @@ public class RouteManager {
             if (endpoint==null)
                 return false;
         }
-
         return true;
-
     }
 
     /**
@@ -96,14 +147,22 @@ public class RouteManager {
      * @return
      */
     public boolean sendAndSave(final MsgInformation msgInformation,final String queueName,final String componentName){
+        String destinationName = componentName+":queue:"+queueName;
         try{
             msgInformationRepository.save(msgInformation);
-            producerTemplate.sendBody(componentName+":queue:"+queueName, msgInformation.getData());
-        }catch(Exception ex){
-            //todo: Запись в лог о неуспешном добавлении в базу либо отправки сообщения в очередь
-            //todo: разбить исключения по типам
+            producerTemplate.sendBody(destinationName, msgInformation.getData());
+        }
+        catch (CamelExecutionException camelException){
+            logger.error("Отправка в сообщения в очередь" + destinationName + " не удалась: " + camelException.getMessage());
             return false;
         }
+        catch(JDBCConnectionException jdbcException){
+            logger.error("Соединение с базой не было установлено: " + jdbcException.getMessage());
+            return false;
+        }
+        logger.info("Запись о сообщении добавлена в базу с id = " + msgInformation.getId()
+                + "; Сообщение отправлено в очередь " + destinationName
+                + ". Размер сообщения: " + msgInformation.getData().length + " байт.");
         return true;
     }
 }

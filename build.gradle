@@ -57,6 +57,7 @@ dependencies {
 	compile group: 'org.yaml', name: 'snakeyaml', version: '1.18'
 	compile group: 'org.apache.camel', name: 'camel-spring-boot', version: '2.19.1'
 	compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: '2.19.1'
+	testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
 
 //task checkFindBugsReport << {

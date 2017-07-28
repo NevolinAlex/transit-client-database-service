@@ -39,7 +39,7 @@ public class MsgInformationRepositoryTest {
         ArrayList<MsgInformation> msgInformationList = msgInformationRepository.
                 findByCustomQueueAndDocumentStatus(msgInformation.getCustomQueue(), msgInformation.getDocumentStatus());
         msgInformationRepository.delete(msgInformation.getId());
-        assertTrue(msgInformation.equals(msgInformationList.get(msgInformationList.size()-1)));
+        assertTrue(msgInformation.equals(msgInformationList.get(0)));
     }
 
     /**
