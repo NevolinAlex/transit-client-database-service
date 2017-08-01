@@ -8,10 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.renue.fts.asktt.client.data.entities.MsgInformation;
 import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
 
 import javax.jms.JMSException;
+import java.util.Date;
+import java.util.HashMap;
 
 
 /**
@@ -19,14 +22,26 @@ import javax.jms.JMSException;
  */
 @Component
 public class RouteManager {
+    //время жизни очереди в милисекундах, если клиент её не опрашивает
+    private static long timeOfAging = 3600 * 1000;
+
     @Autowired
     private CamelContext camelContext;
+
     @Autowired
     private ProducerTemplate producerTemplate;
+
     @Autowired
     private MsgInformationRepository msgInformationRepository;
 
+
+
     private Logger logger = (Logger) LoggerFactory.getLogger(RouteManager.class);
+
+    /**
+     * Время последнего опроса очередей.
+     */
+    private HashMap<String, Date> lastPollingTime = new HashMap<>();
 
     /**
      * Добавление очереди для прослушивания.
@@ -43,10 +58,11 @@ public class RouteManager {
                 camelContext.addRoutes(new RouteBuilder() {
                     public void configure() {
                         from(componentName+":queue:"+queueName)
-                                .routeId(queueName)
-                                .log(LoggingLevel.INFO, "Send to "+queueName+"\n").bean(MyCamelConsumer.class, "receiveMessage(Exchange,${body})");//todo: перенаправить считывание очереди в метод
+                                .routeId(queueName).transacted()
+                                .bean("myCamelConsumer", "receiveMessage(Exchange,${body})");//todo: перенаправить считывание очереди в метод
                     }
                 });
+                lastPollingTime.putIfAbsent(queueName, new Date());
                 logger.info("Стартовало прослушивание очереди: " + componentName + ":" + queueName + ".");
             }catch (Exception ex){
                 logger.error("Невозможно подключиться к очереди: " + componentName + ":" + queueName + ".");
@@ -67,13 +83,16 @@ public class RouteManager {
         try{
             if (route != null && stopRouteById(routeId)){
                 camelContext.removeRoute(routeId);
+                lastPollingTime.remove(routeId);
+                return true;
             }
-            return true;
+
         }catch (Exception ex){
             // TODO: 28.07.2017 вывести название очереди
             logger.error("Очередь"+route+" не может быть удалена ");
             return false;
         }
+        return false;
     }
 
     /**
@@ -113,12 +132,12 @@ public class RouteManager {
             }
         }
         catch (Exception ex){
-            // TODO: 28.07.2017  вывести название очереди которая не может быть запущена
-            logger.error("Остановленная очередь" + camelContext + " не может быть запущена. " + ex.getMessage());
+            // TODO: 28.07.2017  вывести полное имя очереди которая не может быть запущена
+            logger.error("Остановленная очередь" + routeId + " не может быть запущена. " + ex.getMessage());
             return false;
         }
-        // TODO: 28.07.2017 вывести имя запущенной очереди
-        logger.info("Очередь " + camelContext + " успешно запущена.");
+        // TODO: 28.07.2017 вывести полное имя запущенной очереди
+        logger.info("Очередь " + routeId + " успешно запущена.");
         return true;
     }
 
@@ -139,6 +158,24 @@ public class RouteManager {
     }
 
     /**
+     *
+     */
+    public boolean removeIfOutDated(final String routeId){
+        if (new Date().getTime() - lastPollingTime.get(routeId).getTime() > timeOfAging) {
+            if (removeRouteById(routeId))
+                return true;
+        }
+        return false;
+    }
+    /**
+     * Обновление времени обращения клиента к сервису.
+     * @param routeId
+     * @return
+     */
+    public void updateLastPollingTime(final String routeId){
+        lastPollingTime.put(routeId, new Date());
+    }
+    /**
      * отправка сообщения в Mq и сохранение в базу.
      * Статус сохранения - SENT
      * @param msgInformation данные для сохранения в базу (hib)
@@ -146,6 +183,7 @@ public class RouteManager {
      * @param componentName Имя компонента
      * @return
      */
+    @Transactional
     public boolean sendAndSave(final MsgInformation msgInformation,final String queueName,final String componentName){
         String destinationName = componentName+":queue:"+queueName;
         try{
@@ -165,4 +203,6 @@ public class RouteManager {
                 + ". Размер сообщения: " + msgInformation.getData().length + " байт.");
         return true;
     }
+
+
 }

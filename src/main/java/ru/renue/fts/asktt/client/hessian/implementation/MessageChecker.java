@@ -3,6 +3,7 @@ package ru.renue.fts.asktt.client.hessian.implementation;
 import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.renue.fts.asktt.client.camel.api.RouteManager;
 import ru.renue.fts.asktt.client.data.entities.MsgInformation;
 import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
 import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
@@ -13,12 +14,14 @@ import ru.renue.fts.asktt.client.hessian.api.IChecker;
  */
 @Component
 public class MessageChecker implements IChecker {
-
+    @Autowired
+    private RouteManager routeManager;
     @Autowired
     private MsgInformationRepository msgInformationRepository;
     @Override
     public byte[] checkByMessage(final String queueName) {
         try{
+            routeManager.updateLastPollingTime(queueName);
             MsgInformation msgInformation = msgInformationRepository
                     .findFirstByCustomQueueAndDocumentStatus(queueName, DocumentStatus.RESEIVED);
             if (msgInformation != null){

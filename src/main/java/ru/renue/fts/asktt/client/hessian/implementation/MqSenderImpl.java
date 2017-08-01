@@ -23,10 +23,11 @@ public class MqSenderImpl implements IMqSender {
     private RouteManager routeManager;
 
     @Override
-    public void sendMessage(final String queueName, final byte[] array) {
+    public boolean sendMessage(final String queueName, final byte[] array) {
         MsgInformation msgInformation = new MsgInformation(array, DocumentStatus.SENT, queueName, new Date());
         if (routeManager.addRoute(queueName, COMPONENT_NAME)){
-           routeManager.sendAndSave(msgInformation, DESTINATION_QUEUE, COMPONENT_NAME);
+           return routeManager.sendAndSave(msgInformation, DESTINATION_QUEUE, COMPONENT_NAME);
         }
+        return false;
     }
 }

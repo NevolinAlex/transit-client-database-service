@@ -39,9 +39,14 @@ public class MsgInformationRepositoryTest {
         ArrayList<MsgInformation> msgInformationList = msgInformationRepository.
                 findByCustomQueueAndDocumentStatus(msgInformation.getCustomQueue(), msgInformation.getDocumentStatus());
         msgInformationRepository.delete(msgInformation.getId());
-        assertTrue(msgInformation.equals(msgInformationList.get(0)));
+        assertTrue(msgInformation.equals(msgInformationList.get(msgInformationList.size()-1)));
     }
 
+    @Test
+    public void findByCustomIdAndDocumentStatusTest1(){
+        ArrayList<MsgInformation> msgInformationList = msgInformationRepository.
+                findByCustomQueueAndDocumentStatus(TEST_CUSTOM_ID, DocumentStatus.SENT);
+    }
     /**
      * Тест на удаление по customId.
      * из таблицы message_information

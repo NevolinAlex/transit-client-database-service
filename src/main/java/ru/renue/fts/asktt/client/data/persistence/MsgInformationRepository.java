@@ -1,9 +1,9 @@
 package ru.renue.fts.asktt.client.data.persistence;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
 import ru.renue.fts.asktt.client.data.entities.MsgInformation;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 /**

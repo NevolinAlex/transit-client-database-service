@@ -11,5 +11,5 @@ public interface IMqSender {
      * @param queueName
      * @param array
      */
-    void sendMessage(String queueName, byte[] array);
+    boolean sendMessage(String queueName, byte[] array);
 }
