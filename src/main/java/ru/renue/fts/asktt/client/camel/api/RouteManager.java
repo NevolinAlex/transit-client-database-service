@@ -1,6 +1,7 @@
 package ru.renue.fts.asktt.client.camel.api;
 
 import ch.qos.logback.classic.Logger;
+import com.ibm.msg.client.jms.DetailedInvalidDestinationException;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.hibernate.exception.JDBCConnectionException;
@@ -13,6 +14,7 @@ import ru.renue.fts.asktt.client.data.entities.MsgInformation;
 import ru.renue.fts.asktt.client.data.persistence.MsgInformationRepository;
 
 import javax.jms.JMSException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -62,7 +64,7 @@ public class RouteManager {
                                 .bean("myCamelConsumer", "receiveMessage(Exchange,${body})");//todo: перенаправить считывание очереди в метод
                     }
                 });
-                lastPollingTime.putIfAbsent(queueName, new Date());
+                lastPollingTime.put(queueName, new Date());
                 logger.info("Стартовало прослушивание очереди: " + componentName + ":" + queueName + ".");
             }catch (Exception ex){
                 logger.error("Невозможно подключиться к очереди: " + componentName + ":" + queueName + ".");
@@ -191,12 +193,15 @@ public class RouteManager {
             producerTemplate.sendBody(destinationName, msgInformation.getData());
         }
         catch (CamelExecutionException camelException){
-            logger.error("Отправка в сообщения в очередь" + destinationName + " не удалась: " + camelException.getMessage());
+            logger.error("Отправка в сообщения в очередь " + destinationName + " не удалась: " + camelException.getMessage());
             return false;
         }
         catch(JDBCConnectionException jdbcException){
             logger.error("Соединение с базой не было установлено: " + jdbcException.getMessage());
             return false;
+        }
+        catch (Exception ex){
+            logger.error("Неизвестная ошибока: " + ex.getMessage());
         }
         logger.info("Запись о сообщении добавлена в базу с id = " + msgInformation.getId()
                 + "; Сообщение отправлено в очередь " + destinationName

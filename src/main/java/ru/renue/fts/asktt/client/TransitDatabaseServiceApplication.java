@@ -16,6 +16,7 @@ import java.io.IOException;
  */
 @SpringBootApplication
 public class TransitDatabaseServiceApplication {
+
     /**
      * Точка входа программы.
      * @param args

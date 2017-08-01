@@ -25,8 +25,12 @@ public class MqSenderImplTest {
     @Test
     public void sendMessage() throws Exception {
         routeManager.addRoute("10502060.INCOME", "wmq");
+        TimeUnit.SECONDS.sleep(5);
+        assertTrue(mqSender.sendMessage(QUEUE_NAME, new byte[]{1,2,4}, QUEUE_NAME));
         TimeUnit.SECONDS.sleep(3);
-        assertTrue(mqSender.sendMessage(QUEUE_NAME, new byte[]{1,2,4}));
+        TimeUnit.SECONDS.sleep(3);
+        routeManager.removeRouteById("10502060.INCOME");
+        TimeUnit.SECONDS.sleep(3);
     }
 
 }

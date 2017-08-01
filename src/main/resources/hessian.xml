@@ -2,8 +2,20 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="/Calculation.http" class="org.springframework.remoting.caucho.HessianServiceExporter">
+
+    <bean id="/calculation" class="org.springframework.remoting.caucho.HessianServiceExporter">
         <property name="service" ref="calculationImpl"/>
         <property name="serviceInterface" value="ru.renue.fts.asktt.client.hessian.api.Calculation"/>
     </bean>
+
+    <bean id="/messageChecker" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="messageChecker"/>
+        <property name="serviceInterface" value="ru.renue.fts.asktt.client.hessian.api.IChecker"/>
+    </bean>
+
+    <bean id="/mqSend" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="mqSenderImpl"/>
+        <property name="serviceInterface" value="ru.renue.fts.asktt.client.hessian.api.IMqSender"/>
+    </bean>
+
 </beans>

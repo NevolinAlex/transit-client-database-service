@@ -3,6 +3,7 @@ package ru.renue.fts.asktt.client.hessian.implementation;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.renue.fts.asktt.client.camel.api.RouteManager;
 import ru.renue.fts.asktt.client.data.entities.MsgInformation;
 import ru.renue.fts.asktt.client.data.enums.DocumentStatus;
@@ -17,16 +18,23 @@ import java.util.Date;
  */
 @Component
 public class MqSenderImpl implements IMqSender {
-    private static String DESTINATION_QUEUE = "10502060.INCOME";
-    private static String COMPONENT_NAME = "wmq";
+    //private static String destinationQueue = "10502060.INCOME";
+    private static String componentName = "wmq";
+
     @Autowired
     private RouteManager routeManager;
 
     @Override
-    public boolean sendMessage(final String queueName, final byte[] array) {
-        MsgInformation msgInformation = new MsgInformation(array, DocumentStatus.SENT, queueName, new Date());
-        if (routeManager.addRoute(queueName, COMPONENT_NAME)){
-           return routeManager.sendAndSave(msgInformation, DESTINATION_QUEUE, COMPONENT_NAME);
+    @Transactional
+    public boolean sendMessage(final String receiveQueue, final byte[] array, final String destinationQueue) {
+        MsgInformation msgInformation = new MsgInformation(array, DocumentStatus.SENT, receiveQueue, new Date());
+        try{
+            if (routeManager.addRoute(receiveQueue, componentName)){
+                return routeManager.sendAndSave(msgInformation, destinationQueue, componentName);
+            }
+        }
+        catch (Exception ex){
+
         }
         return false;
     }

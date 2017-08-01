@@ -18,6 +18,7 @@ public class MessageChecker implements IChecker {
     private RouteManager routeManager;
     @Autowired
     private MsgInformationRepository msgInformationRepository;
+
     @Override
     public byte[] checkByMessage(final String queueName) {
         try{
@@ -31,9 +32,8 @@ public class MessageChecker implements IChecker {
             }
         }
         catch (JDBCConnectionException jdbcException){
-
+            return null;
         }
-
         return null;
     }
 }

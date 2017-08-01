@@ -63,7 +63,7 @@ public class RestControllerExample {
         catch (Exception ex){
             return "Error deleting the user: " + ex.toString();
         }
-        mqSender.sendMessage("10502060.INCOME", new byte[]{1,2,3});
+        mqSender.sendMessage("10502060.INCOME", new byte[]{1,2,3}, "10502060.INCOME");
         //producerTemplate.sendBody("wmq:queue:10502060.INCOME", "test");
 //        camelContext.stopRoute("100");
 //        camelContext.removeRoute("100");

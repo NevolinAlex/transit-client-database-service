@@ -8,8 +8,9 @@ public interface IMqSender {
      * Интерфейс для Hessian.
      * перенаправляет отправку сообщения от
      * клиента на сервис и в mq
-     * @param queueName
+     * @param receiveQueue
      * @param array
+     * @param destinationQueue
      */
-    boolean sendMessage(String queueName, byte[] array);
+    boolean sendMessage(String receiveQueue, byte[] array, String destinationQueue);
 }
